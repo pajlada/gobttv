@@ -28,5 +28,5 @@ jobs:
       run: go test -v
 
     - name: GolangCI-Lint Action
-      uses: docker://golangci/golangci-lint:v1.21.0
+      uses: ./action.yml
       run: golangci-lint run
