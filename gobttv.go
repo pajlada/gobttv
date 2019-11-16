@@ -2,10 +2,6 @@ package gobttv
 
 import "github.com/dankeroni/jsonapi"
 
-type test struct {
-	asd string
-}
-
 // BTTVAPI struct
 type BTTVAPI struct {
 	jsonapi.JSONAPI
