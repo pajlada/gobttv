@@ -17,7 +17,7 @@ type BTTVAPI struct {
 func New() *BTTVAPI {
 	return &BTTVAPI{
 		JSONAPI: jsonapi.JSONAPI{
-			BaseURL: "https://api.betterttv.net",
+			BaseURL: "https://api.betterttv.net/3",
 		},
 	}
 }

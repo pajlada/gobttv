@@ -4,7 +4,9 @@ Uses [jsonapi](https://github.com/dankeroni/jsonapi) by [dankeroni](https://gith
 
 Inspired by [gotwitch](https://github.com/dankeroni/gotwitch)
 
-## Example for getting a Room object
+Uses BetterTTV's v3 api
+
+## Example for getting a Channel object
 ```go
 package main
 
@@ -17,7 +19,8 @@ import (
 var api = gobttv.New()
 
 func main() {
-    api.GetEmotes("pajlada", onSuccess, onHTTPError, onInternalError)
+    // 11148817 is the user ID for pajlada
+    api.GetEmotes("11148817", onSuccess, onHTTPError, onInternalError)
 }
 
 func onSuccess(emotes gobttv.EmotesResponse) {

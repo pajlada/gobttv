@@ -2,29 +2,29 @@ package gobttv
 
 import "github.com/dankeroni/jsonapi"
 
-// ChannelEmoteData json to struct
-type ChannelEmoteData struct {
-	ID        string `json:"id"`
-	Channel   string `json:"channel"`
-	Code      string `json:"code"`
-	ImageType string `json:"imageType"`
-}
-
 // ChannelResponse json to struct
 type ChannelResponse struct {
-	Status      int                `json:"status"`
-	URLTemplate string             `json:"urlTemplate"`
-	Bots        []string           `json:"bots"`
-	Emotes      []ChannelEmoteData `json:"emotes"`
+	ID            string   `json:"id"`
+	Bots          []string `json:"bots"`
+	ChannelEmotes []Emote  `json:"channelEmotes"`
+	SharedEmotes  []Emote  `json:"sharedEmotes"`
 }
 
-// GetChannel request for GET https://api.betterttv.net/channels/:channelName
-func (bttvAPI *BTTVAPI) GetChannel(channelName string, onSuccess func(ChannelResponse),
+// GetChannel request for GET https://api.betterttv.net/3/cached/users/twitch/:channelID
+func (bttvAPI *BTTVAPI) GetChannel(channelID string, onSuccess func(ChannelResponse),
 	onHTTPError jsonapi.HTTPErrorCallback, onInternalError jsonapi.InternalErrorCallback) {
-	var channel ChannelResponse
+	var response ChannelResponse
 	onSuccessfulRequest := func() {
-		onSuccess(channel)
+		for i := range response.ChannelEmotes {
+			response.ChannelEmotes[i].populateURLs()
+		}
+
+		for i := range response.SharedEmotes {
+			response.SharedEmotes[i].populateURLs()
+		}
+
+		onSuccess(response)
 	}
-	bttvAPI.Get("/2/channels/"+channelName, nil, &channel, onSuccessfulRequest,
+	bttvAPI.Get("/cached/users/twitch/"+channelID, nil, &response, onSuccessfulRequest,
 		onHTTPError, onInternalError)
 }
