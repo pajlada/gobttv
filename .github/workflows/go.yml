@@ -1,9 +1,9 @@
-name: Go
+name: Go (Test)
 on: [push, pull_request]
 jobs:
 
   build:
-    name: Build
+    name: Test
     runs-on: ubuntu-latest
     steps:
 
@@ -26,6 +26,3 @@ jobs:
 
     - name: Test
       run: go test -v
-
-    - name: GolangCI-Lint Action
-      uses: actions-contrib/golangci-lint@v0.1.0
