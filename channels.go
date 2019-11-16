@@ -49,7 +49,7 @@ func (bttvAPI *BTTVAPI) GetChannel(channelID string) (channel ChannelResponse, e
 			return
 		}
 
-		err = fmt.Errorf("HTTP Error occured while getting channel of %s: %d(%s) %s", channelID, statusCode, statusMessage, errorMessage)
+		err = fmt.Errorf("HTTP Error occurred while getting channel of %s: %d(%s) %s", channelID, statusCode, statusMessage, errorMessage)
 		close(c)
 	}
 
