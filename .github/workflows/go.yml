@@ -29,3 +29,5 @@ jobs:
 
     - name: GolangCI-Lint Action
       uses: actions-contrib/golangci-lint@v0.1.0
+      with:
+        args: run
