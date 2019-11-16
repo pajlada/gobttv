@@ -29,4 +29,3 @@ jobs:
 
     - name: GolangCI-Lint Action
       uses: ./action.yml
-      run: golangci-lint run
