@@ -29,6 +29,5 @@ jobs:
 
     - name: Lint
       uses: reviewdog/action-golangci-lint@v1
-
-      # - name: GolangCI-Lint Action
-      #   uses: ./.github/actions/action
+      with:
+        github_token: ${{ secrets.github_token  }}
