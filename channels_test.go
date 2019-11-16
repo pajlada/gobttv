@@ -1,39 +1,72 @@
 package gobttv
 
-import "testing"
+import (
+	"testing"
+)
+
+func assertNoChannelResponse(t *testing.T) func(channel ChannelResponse) {
+	return func(channel ChannelResponse) {
+		t.Fatal("Got channel response when none was expected")
+	}
+}
 
 func TestFindChannelEmoteWAYTOODANK(t *testing.T) {
-	e := Emote{
-		ID:        "5ad22a7096065b6c6bddf7f3",
-		Code:      "WAYTOODANK",
-		ImageType: "gif",
-
-		URLs: URLs{
-			X1: "https://cdn.betterttv.net/emote/5ad22a7096065b6c6bddf7f3/1x",
-			X2: "https://cdn.betterttv.net/emote/5ad22a7096065b6c6bddf7f3/2x",
-			X4: "https://cdn.betterttv.net/emote/5ad22a7096065b6c6bddf7f3/3x",
-		},
+	channel, err := api.GetChannel(userIDPajlada)
+	if err != nil {
+		t.Fatal(err)
 	}
 
-	found := false
-
-	c := make(chan struct{})
-	onResponse := func(response ChannelResponse) {
-		for _, emote := range response.ChannelEmotes {
-			if emote == e {
-				found = true
-				break
-			}
+	for _, emote := range channel.Emotes {
+		if emote == WAYTOODANK {
+			return
 		}
+	}
 
+	t.Fatal("Did not find WAYTOODANK in set of channel emotes, this might be due to the API being changed")
+}
+
+func TestChannelHaveNotSignedInInternal(t *testing.T) {
+	onHTTPError := func(statusCode int, statusMessage, errorMessage string) {
+		if statusCode != 404 {
+			t.Fatalf("Unhandled HTTP error %d (%s): %s", statusCode, statusMessage, errorMessage)
+		}
+	}
+
+	api.getChannel(userIDNotLoggedIn, assertNoChannelResponse(t), onHTTPError, onInternalError(t))
+}
+
+func TestChannelHaveNotSignedIn(t *testing.T) {
+	channel, err := api.GetChannel(userIDNotLoggedIn)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(channel.Emotes) != 0 || len(channel.SharedEmotes) != 0 {
+		t.Fatal("There should not be any emotes in this response")
+	}
+}
+
+func TestChannelHaveSignedInNoEmotesInternal(t *testing.T) {
+	c := make(chan struct{})
+	onResponse := func(channel ChannelResponse) {
+		if len(channel.Emotes) != 0 || len(channel.SharedEmotes) != 0 {
+			t.Fatal("There should not be any emotes in this response")
+		}
 		close(c)
 	}
 
-	api.GetChannel("11148817", onResponse, onHTTPError(t), onInternalError(t))
+	api.getChannel(userIDLoggedInNoEmotes, onResponse, onHTTPError(t), onInternalError(t))
 
 	<-c
-	if !found {
-		t.Fatalf("Did not find WAYTOODANK in set of channel emotes, this might be due to the API being changed")
+}
+
+func TestChannelHaveSignedInNoEmotes(t *testing.T) {
+	channel, err := api.GetChannel(userIDLoggedInNoEmotes)
+	if err != nil {
+		t.Fatal(err)
 	}
 
+	if len(channel.Emotes) != 0 || len(channel.SharedEmotes) != 0 {
+		t.Fatal("There should not be any emotes in this response")
+	}
 }

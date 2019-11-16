@@ -7,18 +7,6 @@ import (
 var api = New()
 
 func TestEnsureNaMExists(t *testing.T) {
-	NaM := Emote{
-		ID:        "566ca06065dbbdab32ec054e",
-		Code:      "NaM",
-		ImageType: "png",
-
-		URLs: URLs{
-			X1: "https://cdn.betterttv.net/emote/566ca06065dbbdab32ec054e/1x",
-			X2: "https://cdn.betterttv.net/emote/566ca06065dbbdab32ec054e/2x",
-			X4: "https://cdn.betterttv.net/emote/566ca06065dbbdab32ec054e/3x",
-		},
-	}
-
 	foundNaM := false
 
 	c := make(chan struct{})

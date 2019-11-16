@@ -19,21 +19,15 @@ import (
 var api = gobttv.New()
 
 func main() {
-    // 11148817 is the user ID for pajlada
-    api.GetEmotes("11148817", onSuccess, onHTTPError, onInternalError)
-}
+    // Get channel information for user "pajlada" (user id 11148817)
+    channel, err := api.GetChannel("11148817")
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println("Channel emotes:", channel.Emotes)
+    fmt.Println("Channel shared emotes:", channel.SharedEmotes)
 
-func onSuccess(emotes gobttv.EmotesResponse) {
-    fmt.Printf("%+v\n", emotes)
-}
-
-func onHTTPError(statusCode int, statusMessage, errorMessage string) {
-    fmt.Println("statusCode:", statusCode)
-    fmt.Println("statusMessage:", statusMessage)
-    fmt.Println("errorMessage:", errorMessage)
-}
-
-func onInternalError(err error) {
-    fmt.Println("internalError:", err)
+    // Get global emotes
+    // TODO: fill this in once that api has been simplified
 }
 ```
