@@ -4,8 +4,8 @@ import (
 	"testing"
 )
 
-func assertNoChannelResponse(t *testing.T) func(channel ChannelResponse) {
-	return func(channel ChannelResponse) {
+func assertNoChannelResponse(t *testing.T) func(channel *ChannelResponse) {
+	return func(channel *ChannelResponse) {
 		t.Fatal("Got channel response when none was expected")
 	}
 }
@@ -48,7 +48,7 @@ func TestChannelHaveNotSignedIn(t *testing.T) {
 
 func TestChannelHaveSignedInNoEmotesInternal(t *testing.T) {
 	c := make(chan struct{})
-	onResponse := func(channel ChannelResponse) {
+	onResponse := func(channel *ChannelResponse) {
 		if len(channel.Emotes) != 0 || len(channel.SharedEmotes) != 0 {
 			t.Fatal("There should not be any emotes in this response")
 		}

@@ -14,7 +14,7 @@ type ChannelResponse struct {
 	SharedEmotes []Emote  `json:"sharedEmotes"`
 }
 
-func (bttvAPI *BTTVAPI) getChannel(channelID string, onSuccess func(ChannelResponse),
+func (bttvAPI *BTTVAPI) getChannel(channelID string, onSuccess func(*ChannelResponse),
 	onHTTPError jsonapi.HTTPErrorCallback, onInternalError jsonapi.InternalErrorCallback) {
 	var response ChannelResponse
 	onSuccessfulRequest := func() {
@@ -26,17 +26,17 @@ func (bttvAPI *BTTVAPI) getChannel(channelID string, onSuccess func(ChannelRespo
 			response.SharedEmotes[i].populateURLs()
 		}
 
-		onSuccess(response)
+		onSuccess(&response)
 	}
 	bttvAPI.Get("/cached/users/twitch/"+channelID, nil, &response, onSuccessfulRequest,
 		onHTTPError, onInternalError)
 }
 
 // GetChannel request for GET https://api.betterttv.net/3/cached/users/twitch/:channelID
-func (bttvAPI *BTTVAPI) GetChannel(channelID string) (channel ChannelResponse, err error) {
+func (bttvAPI *BTTVAPI) GetChannel(channelID string) (channel *ChannelResponse, err error) {
 	c := make(chan struct{})
 
-	onSuccessfulRequest := func(r ChannelResponse) {
+	onSuccessfulRequest := func(r *ChannelResponse) {
 		channel = r
 
 		close(c)
@@ -45,6 +45,7 @@ func (bttvAPI *BTTVAPI) GetChannel(channelID string) (channel ChannelResponse, e
 	onHTTPError := func(statusCode int, statusMessage, errorMessage string) {
 		if statusCode == 404 {
 			// User has not signed into BTTV - return an empty struct
+			channel = &ChannelResponse{}
 			close(c)
 			return
 		}
