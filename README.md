@@ -28,6 +28,10 @@ func main() {
     fmt.Println("Channel shared emotes:", channel.SharedEmotes)
 
     // Get global emotes
-    // TODO: fill this in once that api has been simplified
+    emotes, err := api.GetEmotes()
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println("Global emotes:", emotes)
 }
 ```

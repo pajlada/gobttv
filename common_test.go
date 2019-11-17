@@ -8,6 +8,8 @@ const (
 	userIDPajlada          = "11148817"
 )
 
+var api = New()
+
 var WAYTOODANK = Emote{
 	ID:        "5ad22a7096065b6c6bddf7f3",
 	Code:      "WAYTOODANK",
